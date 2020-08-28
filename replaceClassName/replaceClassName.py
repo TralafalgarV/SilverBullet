@@ -113,11 +113,20 @@ def pbRule(cn):
     rules.append(rule_4)
     return rules
 
+# 可以在此函数中，个性化定制流程
+def replaceHeaderAndTrail(prefix, fileName, suffix):
+    # newFileName = fileName.replace('ASZX', prefix, 1)
+    # newFileName = newFileName.replace('HJKL', suffix, 1)
+    # newFileName = newFileName.replace('LGJP', 'Class', 1)
+    # newFileName = newFileName.replace('NMSC', 'Func', 1)
+    newFileName = prefix + fileName + suffix
+    return newFileName
+
 
 def getClassNames(filepath):
     #读取文件名入数组
-    #过滤文件夹
-    filterDirs = ["/Users/wangwei/Desktop/Project/mall/mall/mall/Vendor"]
+    #过滤文件夹(需要手写)
+    filterDirs = ['/Users/wangwei/Desktop/Project/mall/mall/song/ASDFResource', '/Users/wangwei/Desktop/Project/mall/mall/Vendor']
     #过滤文件
     filterFiles = []
     classNames = []
@@ -152,8 +161,6 @@ def getClassNames(filepath):
     return classNames
 
 
-
-
 def changePBFile(PBFilePath,classNames,prefix,suffix):
     with open(PBFilePath,"r") as file_read:
         lines = file_read.readlines()
@@ -161,7 +168,7 @@ def changePBFile(PBFilePath,classNames,prefix,suffix):
         for line in lines:
             for cn in classNames:
                 oldRules = pbRule(cn)
-                newRules = pbRule(prefix + cn + suffix)
+                newRules = pbRule(replaceHeaderAndTrail(prefix, cn, suffix))
                 for x in range(0,len(oldRules)):
                     if oldRules[x] in line:
                         line = line.replace(oldRules[x],newRules[x])
@@ -172,8 +179,7 @@ def changePBFile(PBFilePath,classNames,prefix,suffix):
 
 def changeClassName(filepath,PBFilePath,prefix,suffix=""):
 
-
-    #读取文件名入数组
+    # 读取文件名入数组
     print("-------------------")
     print("-------获取文件名列表-----")
     classNames = getClassNames(filepath)
@@ -187,14 +193,15 @@ def changeClassName(filepath,PBFilePath,prefix,suffix=""):
             ##过滤framework 以及 .a
             oldFilePath = os.path.join(root, name)
             if oldFilePath.find(".framework/") != -1 or oldFilePath.find(".a/") != -1:
-                continue;
+                continue
             ##仅仅处理 .h .m .xib .pch .storyboard
             if name.find(".pch") != -1 or name.find(".h") != -1 or name.find(".m") != -1 or name.find(".xib") != -1 or name.find(".storyboard") != -1:
                 print("-------正在处理" + name + "-----")
-                #去掉.以及后缀
+                # 去掉.以及后缀
                 splitFileNameArr = name.split('.')
                 fileName = splitFileNameArr[0]
-                newFileName = prefix + fileName + suffix + "." + splitFileNameArr[1]
+                # 生成新的类名
+                newFileName = replaceHeaderAndTrail(prefix, fileName, suffix) + "." + splitFileNameArr[1]
                 newFilePath = os.path.join(root, newFileName)
                 # print(oldFilePath)
                 # print(newFilePath)
@@ -204,7 +211,7 @@ def changeClassName(filepath,PBFilePath,prefix,suffix=""):
                     for line in lines:
                         for cn in classNames:
                             oldRules = rule(cn)
-                            newRules = rule(prefix + cn + suffix)
+                            newRules = rule(replaceHeaderAndTrail(prefix, cn, suffix))
                             for x in range(0,len(oldRules)):
                                 if oldRules[x] in line:
                                     line = line.replace(oldRules[x],newRules[x])
