@@ -226,6 +226,8 @@ def changeClassName(filepath,PBFilePath,prefix,suffix=""):
     print("-------处理pb文件完成--------")
 
 #main
+# python replaceClassName.py /Users/wangwei/Desktop/Project/mall/mall/SDFG/SDFGClasses /Users/wangwei/Desktop/Project/mall/mall/qwerasdf.xcodeproj/project.pbxproj UUIO NMSL
+
 opts, args = getopt.getopt(sys.argv[1:], "h", ["help"])
 isNeedHelp = 0
 filePath = ""
@@ -260,4 +262,4 @@ if isNeedHelp == 0:
         if prefix == "" and suffix == "":
             print("大佬 前缀后缀都为空字符串。。。你是在逗本脚本吗??")
             os._exit(0)
-changeClassName(filePath,pbPath,prefix,suffix)
+changeClassName(filePath, pbPath, prefix, suffix)
